@@ -2,7 +2,7 @@ CREATE OR REPLACE PACKAGE acc407p_utl_graf
 IS
 
 -- n1K@N 23.05.2024
--- справочник объектов хранения и анализа
+-- справочник объектов поиска и анализа
 -- v 1.0.2 02.02.2026
 
 -- возвращает наименование типа объекта из справочника типов
@@ -27,6 +27,34 @@ vIgnoreEmail VARCHAR2(64) := '&?=+#%}{\[]|^<>*$!~`,()';
 vRus VARCHAR2(64) := 'АВЕКМНОРСТХ';
 vEng VARCHAR2(64) := 'ABEKMHOPCTX';
 C_T_EMAIL CONSTANT VARCHAR2(10) := 'EMAIL'; -- стандартный тип для email
+
+-- сохранить новый объект
+PROCEDURE ins_obj(pObj acc407p_graf.cacc%TYPE, pType acc407p_graf.ctype%TYPE)
+IS
+BEGIN
+  INSERT INTO acc407p_graf(CACC,CTYPE)
+  VALUES(pObj,pType);
+END;
+
+-- изменить объект
+PROCEDURE upd_obj(pObj acc407p_graf.cacc%TYPE, pType acc407p_graf.ctype%TYPE)
+IS
+BEGIN
+  UPDATE acc407p_graf SET 
+    CACC = pObj,
+    CTYPE = pType
+  WHERE CACC = pObj
+        AND CTYPE = pType;
+END;
+
+-- удалить объект
+PROCEDURE del_obj(pObj acc407p_graf.cacc%TYPE, pType acc407p_graf.ctype%TYPE)
+IS
+BEGIN
+  DELETE acc407p_graf
+  WHERE CACC = pObj
+        AND CTYPE = pType;
+END;
 
 FUNCTION get_obj_type_note(pType IN VARCHAR2) RETURN VARCHAR2
 IS
@@ -85,8 +113,7 @@ BEGIN
         IF rOBJ.rez_obj IS NOT NULL THEN
             iCntAll := iCntAll + 1;
             begin
-                INSERT INTO acc407p_graf(CACC,CTYPE)
-                VALUES(rOBJ.rez_obj,pType);
+                ins_obj(rOBJ.rez_obj,pType);
                 iCntIns := iCntIns + 1;
             EXCEPTION WHEN DUP_VAL_ON_INDEX THEN
                 iCntDup := iCntDup + 1;
@@ -98,6 +125,8 @@ BEGIN
             'Успешно сохранено объектов - '||iCntIns||CHR(10)||
             'Игнорировано дубликатов - '||iCntDup
     ;
+EXCEPTION WHEN OTHERS THEN
+  pMess := 'Непредвиденная ошибка обработки: '||SQLERRM;
 END parce_str;
 
 PROCEDURE parce_requests(pMess OUT VARCHAR2, pType IN VARCHAR2, pMARKER_ID IN NUMBER)
