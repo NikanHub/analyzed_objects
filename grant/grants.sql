@@ -1,0 +1,15 @@
+DROP PUBLIC SYNONYM acc407p_graf;
+CREATE PUBLIC SYNONYM acc407p_graf FOR acc407p_graf;
+GRANT ALL PRIVILEGES ON acc407p_graf TO odb;
+
+DROP PUBLIC SYNONYM acc407p_types_graf;
+CREATE PUBLIC SYNONYM acc407p_types_graf FOR acc407p_types_graf;
+GRANT ALL PRIVILEGES ON acc407p_types_graf TO odb;
+
+DROP PUBLIC SYNONYM acc407p_utl_graf;
+CREATE PUBLIC SYNONYM acc407p_utl_graf FOR acc407p_utl_graf;
+GRANT EXECUTE ON acc407p_utl_graf TO odb;
+
+DROP PUBLIC SYNONYM v_acc407p_graf;
+CREATE PUBLIC SYNONYM v_acc407p_graf FOR v_acc407p_graf;
+GRANT ALL PRIVILEGES ON v_acc407p_graf TO odb;
