@@ -3,19 +3,22 @@ IS
 
 -- n1K@N 23.05.2024
 -- справочник объектов поиска и анализа
--- v 1.0.2 02.02.2026
+-- v 1.0.3 30.06.2026
 
 -- возвращает наименование типа объекта из справочника типов
 FUNCTION get_obj_type_note(pType IN VARCHAR2) RETURN VARCHAR2;
 
 -- анализ переданной строки
-PROCEDURE parce_str(pMess OUT VARCHAR2, pType IN VARCHAR2, pStr IN CLOB);
+PROCEDURE parse_str(pMess OUT VARCHAR2, pType IN VARCHAR2, pStr IN CLOB);
 
 -- разбор помеченных запросов по 407-П (кастомное решение)
-PROCEDURE parce_requests(pMess OUT VARCHAR2, pType IN VARCHAR2, pMARKER_ID IN NUMBER);
+PROCEDURE parse_requests(pMess OUT VARCHAR2, pType IN VARCHAR2, pMARKER_ID IN NUMBER);
 
 -- возвращает объект из хранилища в случае вхождения его в заданную строку
 FUNCTION check_str(pStr IN VARCHAR2, pType IN VARCHAR2 DEFAULT 'ALL') RETURN VARCHAR2;
+
+-- удалить все объекты указанного типа
+PROCEDURE del_obj_type(pType acc407p_graf.ctype%TYPE);
 
 END acc407p_utl_graf;
 /
@@ -56,6 +59,13 @@ BEGIN
         AND CTYPE = pType;
 END;
 
+PROCEDURE del_obj_type(pType acc407p_graf.ctype%TYPE)
+IS
+BEGIN
+  DELETE acc407p_graf
+  WHERE CTYPE = pType;
+END;
+
 FUNCTION get_obj_type_note(pType IN VARCHAR2) RETURN VARCHAR2
 IS
     cNote acc407p_types_graf.CNOTE%TYPE;
@@ -70,13 +80,13 @@ BEGIN
 END get_obj_type_note;
 
 
-PROCEDURE parce_str(pMess OUT VARCHAR2, pType IN VARCHAR2, pStr IN CLOB)
+PROCEDURE parse_str(pMess OUT VARCHAR2, pType IN VARCHAR2, pStr IN CLOB)
 IS
     cPatt VARCHAR2(254);
     iCntAll NUMBER := 0;
     iCntIns NUMBER := 0;
     iCntDup NUMBER := 0;
-    vStr CLOB := pStr;
+    vStr CLOB := pStr; 
     CURSOR curTypes IS
         SELECT CREGEXP FROM acc407p_types_graf
             WHERE CTYPE = pType;
@@ -103,6 +113,7 @@ BEGIN
         pMess := 'Не указано регулярное выражение для типа данных '||pType; RETURN;
     END IF;
     cPatt := '\W'||cPatt;
+    vStr := ' '||vStr; -- добавим пробел вначале, ибо вначале любой строки ожидается пробел(пошло из 407-П)
     dbms_output.put_line('Строка для анализа: '||vStr);
     FOR rOBJ IN (SELECT SUBSTR(regexp_substr(obj, patt, 1, rownum),2) rez_obj
                     FROM (SELECT vStr AS obj
@@ -127,9 +138,9 @@ BEGIN
     ;
 EXCEPTION WHEN OTHERS THEN
   pMess := 'Непредвиденная ошибка обработки: '||SQLERRM;
-END parce_str;
+END parse_str;
 
-PROCEDURE parce_requests(pMess OUT VARCHAR2, pType IN VARCHAR2, pMARKER_ID IN NUMBER)
+PROCEDURE parse_requests(pMess OUT VARCHAR2, pType IN VARCHAR2, pMARKER_ID IN NUMBER)
 IS
 BEGIN
     IF pMARKER_ID IS NULL THEN
@@ -142,9 +153,9 @@ BEGIN
                     AND IDROW = IID
                     AND CCLIENT_OTHER_INFO IS NOT NULL)
     LOOP
-        parce_str(pMess, pType, rREQ.CCLIENT_OTHER_INFO);
+        parse_str(pMess, pType, rREQ.CCLIENT_OTHER_INFO);
     END LOOP;
-END parce_requests;
+END parse_requests;
 
 FUNCTION check_str(pStr IN VARCHAR2, pType IN VARCHAR2 DEFAULT 'ALL') RETURN VARCHAR2
 IS
