@@ -1,13 +1,13 @@
 INSERT INTO ACC407P_TYPES_GRAF (CTYPE,CNOTE,CREGEXP) 
-VALUES('INN','ИНН','\W[0-9]{5,12}');
+VALUES('INN','РРќРќ','\W[0-9]{5,12}');
 INSERT INTO ACC407P_TYPES_GRAF (CTYPE,CNOTE,CREGEXP) 
-VALUES('EMAIL','Эл.почта/кошельки','\W[A-z0-9._%-]+@[A-z0-9._%-]+\.[A-z]{2,4}');
+VALUES('EMAIL','Р­Р».РїРѕС‡С‚Р°/РєРѕС€РµР»СЊРєРё','\W[A-z0-9._%-]+@[A-z0-9._%-]+\.[A-z]{2,4}');
 INSERT INTO ACC407P_TYPES_GRAF (CTYPE,CNOTE,CREGEXP) 
-VALUES('ACC','Счета РФ','\W[0-9]{20}');
+VALUES('ACC','РЎС‡РµС‚Р° Р Р¤','\W[0-9]{20}');
 INSERT INTO ACC407P_TYPES_GRAF (CTYPE,CNOTE,CREGEXP) 
-VALUES('CARD','Банк.карты','\W\d{16}');
+VALUES('CARD','Р‘Р°РЅРє.РєР°СЂС‚С‹','\W\d{16}');
 INSERT INTO ACC407P_TYPES_GRAF (CTYPE,CNOTE,CREGEXP) 
-VALUES('IBAN','Международный номер банковского счета','\W[A-Z]{2}[0-9A-Z]{1,32}');
+VALUES('IBAN','РњРµР¶РґСѓРЅР°СЂРѕРґРЅС‹Р№ РЅРѕРјРµСЂ Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡РµС‚Р°','\W[A-Z]{2}[0-9A-Z]{1,32}');
 INSERT INTO ACC407P_TYPES_GRAF (CTYPE,CNOTE,CREGEXP) 
-VALUES('NONE_ACC','Другие счета','\W\d+');
+VALUES('NONE_ACC','Р”СЂСѓРіРёРµ СЃС‡РµС‚Р°','\W\d+');
 COMMIT;

@@ -39,13 +39,13 @@ BEGIN
 END;
 /
 
-COMMENT ON TABLE acc407p_graf IS 'Справочник объектов поиска и анализа'
+COMMENT ON TABLE acc407p_graf IS 'РЎРїСЂР°РІРѕС‡РЅРёРє РѕР±СЉРµРєС‚РѕРІ РїРѕРёСЃРєР° Рё Р°РЅР°Р»РёР·Р°'
 /
-COMMENT ON COLUMN acc407p_graf.cacc IS 'Счет/карта/строка'
+COMMENT ON COLUMN acc407p_graf.cacc IS 'РЎС‡РµС‚/РєР°СЂС‚Р°/СЃС‚СЂРѕРєР°'
 /
-COMMENT ON COLUMN acc407p_graf.ctype IS 'Тип(ACC,CARD,...)'
+COMMENT ON COLUMN acc407p_graf.ctype IS 'РўРёРї(ACC,CARD,...)'
 /
-COMMENT ON COLUMN acc407p_graf.ddate IS 'Дата добавления'
+COMMENT ON COLUMN acc407p_graf.ddate IS 'Р”Р°С‚Р° РґРѕР±Р°РІР»РµРЅРёСЏ'
 /
 COMMENT ON COLUMN acc407p_graf.iid IS 'ID'
 /
