@@ -2,38 +2,38 @@ CREATE OR REPLACE PACKAGE acc407p_utl_graf
 IS
 
 -- n1K@N 23.05.2024
--- справочник объектов поиска и анализа
+-- СЃРїСЂР°РІРѕС‡РЅРёРє РѕР±СЉРµРєС‚РѕРІ РїРѕРёСЃРєР° Рё Р°РЅР°Р»РёР·Р°
 -- v 1.0.5 26.08.2026
 
--- возвращает наименование группы/категории
+-- РІРѕР·РІСЂР°С‰Р°РµС‚ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РіСЂСѓРїРїС‹/РєР°С‚РµРіРѕСЂРёРё
 FUNCTION get_grp_name(p_id_grp IN NUMBER) RETURN ACC407P_GRP_GRAF.CGRPNAME%TYPE;
 
--- возвращает наименование типа объекта из справочника типов
+-- РІРѕР·РІСЂР°С‰Р°РµС‚ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РёРїР° РѕР±СЉРµРєС‚Р° РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° С‚РёРїРѕРІ
 FUNCTION get_obj_type_note(pType IN VARCHAR2) RETURN VARCHAR2;
 
--- анализ переданной строки
+-- Р°РЅР°Р»РёР· РїРµСЂРµРґР°РЅРЅРѕР№ СЃС‚СЂРѕРєРё
 PROCEDURE parse_str(pMess OUT VARCHAR2, pType IN VARCHAR2, pGrp IN NUMBER, pStr IN CLOB);
 
--- разбор помеченных запросов по 407-П (кастомное решение)
+-- СЂР°Р·Р±РѕСЂ РїРѕРјРµС‡РµРЅРЅС‹С… Р·Р°РїСЂРѕСЃРѕРІ РїРѕ 407-Рџ (РєР°СЃС‚РѕРјРЅРѕРµ СЂРµС€РµРЅРёРµ)
 PROCEDURE parse_requests(pMess OUT VARCHAR2, pType IN VARCHAR2, pGrp IN NUMBER, pMARKER_ID IN NUMBER);
 
--- возвращает объект из хранилища в случае вхождения его в заданную строку
+-- РІРѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚ РёР· С…СЂР°РЅРёР»РёС‰Р° РІ СЃР»СѓС‡Р°Рµ РІС…РѕР¶РґРµРЅРёСЏ РµРіРѕ РІ Р·Р°РґР°РЅРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 FUNCTION check_str(pStr IN VARCHAR2
-                   , pType IN VARCHAR2 DEFAULT 'ALL'  -- тип объекта(из ACC407P_TYPES_GRAF)
-                   , pGrp IN NUMBER DEFAULT NULL      -- id группы/категории/вида_проверки(из ACC407P_GRP_GRAF)
-                   , pMode IN VARCHAR2 DEFAULT 'LIKE' -- режим поиска (MATCH-точное совпадение; LIKE-поиск подстроки)
+                   , pType IN VARCHAR2 DEFAULT 'ALL'  -- С‚РёРї РѕР±СЉРµРєС‚Р°(РёР· ACC407P_TYPES_GRAF)
+                   , pGrp IN NUMBER DEFAULT NULL      -- id РіСЂСѓРїРїС‹/РєР°С‚РµРіРѕСЂРёРё/РІРёРґР°_РїСЂРѕРІРµСЂРєРё(РёР· ACC407P_GRP_GRAF)
+                   , pMode IN VARCHAR2 DEFAULT 'LIKE' -- СЂРµР¶РёРј РїРѕРёСЃРєР° (MATCH-С‚РѕС‡РЅРѕРµ СЃРѕРІРїР°РґРµРЅРёРµ; LIKE-РїРѕРёСЃРє РїРѕРґСЃС‚СЂРѕРєРё)
 ) RETURN VARCHAR2;
 
--- удалить все объекты указанного типа
+-- СѓРґР°Р»РёС‚СЊ РІСЃРµ РѕР±СЉРµРєС‚С‹ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‚РёРїР°
 PROCEDURE del_obj_type(pType acc407p_graf.ctype%TYPE);
 
--- добавить объект в группу
+-- РґРѕР±Р°РІРёС‚СЊ РѕР±СЉРµРєС‚ РІ РіСЂСѓРїРїСѓ
 PROCEDURE ins_acc_grp(p_acc_id IN NUMBER, p_grp_id IN NUMBER DEFAULT NULL);
 
--- удалить объект из группы
+-- СѓРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚ РёР· РіСЂСѓРїРїС‹
 PROCEDURE del_acc_grp(p_acc_id IN NUMBER, p_grp_id IN NUMBER DEFAULT NULL);
 
--- изменить состав групп для объекта
+-- РёР·РјРµРЅРёС‚СЊ СЃРѕСЃС‚Р°РІ РіСЂСѓРїРї РґР»СЏ РѕР±СЉРµРєС‚Р°
 PROCEDURE upd_group_members(p_acc_id IN NUMBER, p_mode IN VARCHAR2, p_grp_id IN NUMBER DEFAULT NULL);
 
 END acc407p_utl_graf;
@@ -43,11 +43,11 @@ IS
 
 vIgnoreAccCard VARCHAR2(64) := '`~!@#$%^&*()-_+=[]{}"''<>?/\|'||chr(10);
 vIgnoreEmail VARCHAR2(64) := '&?=+#%}{\[]|^<>*$!~`,()';
-vRus VARCHAR2(64) := 'АВЕКМНОРСТХ';
+vRus VARCHAR2(64) := 'РђР’Р•РљРњРќРћР РЎРўРҐ';
 vEng VARCHAR2(64) := 'ABEKMHOPCTX';
-C_T_EMAIL CONSTANT VARCHAR2(10) := 'EMAIL'; -- стандартный тип для email
+C_T_EMAIL CONSTANT VARCHAR2(10) := 'EMAIL'; -- СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ С‚РёРї РґР»СЏ email
 
--- сохранить новый объект
+-- СЃРѕС…СЂР°РЅРёС‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚
 FUNCTION ins_obj(pObj acc407p_graf.cacc%TYPE, pType acc407p_graf.ctype%TYPE) RETURN NUMBER
 IS
   vId NUMBER;
@@ -59,7 +59,7 @@ BEGIN
   RETURN vId;
 END;
 
--- изменить объект
+-- РёР·РјРµРЅРёС‚СЊ РѕР±СЉРµРєС‚
 PROCEDURE upd_obj(pObj acc407p_graf.cacc%TYPE, pType acc407p_graf.ctype%TYPE)
 IS
 BEGIN
@@ -70,7 +70,7 @@ BEGIN
         AND CTYPE = pType;
 END;
 
--- удалить объект
+-- СѓРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚
 PROCEDURE del_obj(pObj acc407p_graf.cacc%TYPE, pType acc407p_graf.ctype%TYPE)
 IS
 BEGIN
@@ -109,7 +109,7 @@ BEGIN
     OPEN cCUR;
     FETCH cCUR INTO cNote;
     CLOSE cCUR;
-    RETURN NVL(cNote,'Неизвестно');
+    RETURN NVL(cNote,'РќРµРёР·РІРµСЃС‚РЅРѕ');
 END get_obj_type_note;
 
 
@@ -127,29 +127,29 @@ IS
             WHERE CTYPE = pType;
 BEGIN
     IF pStr IS NULL THEN
-        pMess := 'Не указана строка для анализа.';
+        pMess := 'РќРµ СѓРєР°Р·Р°РЅР° СЃС‚СЂРѕРєР° РґР»СЏ Р°РЅР°Р»РёР·Р°.';
         RETURN;
     ELSIF pType IS NULL THEN
-        pMess := 'Не указан тип обрабатываемых данных '||pType;
+        pMess := 'РќРµ СѓРєР°Р·Р°РЅ С‚РёРї РѕР±СЂР°Р±Р°С‚С‹РІР°РµРјС‹С… РґР°РЅРЅС‹С… '||pType;
         RETURN;
     END IF;
 
     IF pType = C_T_EMAIL THEN
-        vStr := REPLACE(TRANSLATE(vStr,vIgnoreEmail,RPAD(' ',LENGTH(vIgnoreEmail))),' ',''); -- убираем символы
+        vStr := REPLACE(TRANSLATE(vStr,vIgnoreEmail,RPAD(' ',LENGTH(vIgnoreEmail))),' ',''); -- СѓР±РёСЂР°РµРј СЃРёРјРІРѕР»С‹
     ELSE
-        vStr := REPLACE(TRANSLATE(vStr,vIgnoreAccCard,RPAD(' ',LENGTH(vIgnoreAccCard))),' ',''); -- убираем символы
-        vStr := TRANSLATE(vStr,vRus,vEng); -- русские буквы заменяем латинскими
+        vStr := REPLACE(TRANSLATE(vStr,vIgnoreAccCard,RPAD(' ',LENGTH(vIgnoreAccCard))),' ',''); -- СѓР±РёСЂР°РµРј СЃРёРјРІРѕР»С‹
+        vStr := TRANSLATE(vStr,vRus,vEng); -- СЂСѓСЃСЃРєРёРµ Р±СѓРєРІС‹ Р·Р°РјРµРЅСЏРµРј Р»Р°С‚РёРЅСЃРєРёРјРё
     END IF;
 
     OPEN curTypes;
     FETCH curTypes INTO cPatt;
     CLOSE curTypes;
     IF cPatt IS NULL THEN
-        pMess := 'Не указано регулярное выражение для типа данных '||pType; RETURN;
+        pMess := 'РќРµ СѓРєР°Р·Р°РЅРѕ СЂРµРіСѓР»СЏСЂРЅРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ РґР»СЏ С‚РёРїР° РґР°РЅРЅС‹С… '||pType; RETURN;
     END IF;
     cPatt := '\W'||cPatt;
-    vStr := ' '||vStr; -- добавим пробел вначале, ибо вначале любой строки ожидается пробел(пошло из 407-П)
-    dbms_output.put_line('Строка для анализа: '||vStr);
+    vStr := ' '||vStr; -- РґРѕР±Р°РІРёРј РїСЂРѕР±РµР» РІРЅР°С‡Р°Р»Рµ, РёР±Рѕ РІРЅР°С‡Р°Р»Рµ Р»СЋР±РѕР№ СЃС‚СЂРѕРєРё РѕР¶РёРґР°РµС‚СЃСЏ РїСЂРѕР±РµР»(РїРѕС€Р»Рѕ РёР· 407-Рџ)
+    dbms_output.put_line('РЎС‚СЂРѕРєР° РґР»СЏ Р°РЅР°Р»РёР·Р°: '||vStr);
     FOR rOBJ IN (SELECT SUBSTR(regexp_substr(obj, patt, 1, rownum),2) rez_obj
                     FROM (SELECT vStr AS obj
                     , cPatt AS patt FROM dual) dual
@@ -169,19 +169,19 @@ BEGIN
       END IF;
     END LOOP;
 
-    pMess := 'Обработано всего объектов - '||iCntAll||CHR(10)||
-            'Успешно сохранено объектов - '||iCntIns||CHR(10)||
-            'Игнорировано дубликатов - '||iCntDup
+    pMess := 'РћР±СЂР°Р±РѕС‚Р°РЅРѕ РІСЃРµРіРѕ РѕР±СЉРµРєС‚РѕРІ - '||iCntAll||CHR(10)||
+            'РЈСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅРѕ РѕР±СЉРµРєС‚РѕРІ - '||iCntIns||CHR(10)||
+            'РРіРЅРѕСЂРёСЂРѕРІР°РЅРѕ РґСѓР±Р»РёРєР°С‚РѕРІ - '||iCntDup
     ;
 EXCEPTION WHEN OTHERS THEN
-  pMess := 'Непредвиденная ошибка обработки: '||SQLERRM;
+  pMess := 'РќРµРїСЂРµРґРІРёРґРµРЅРЅР°СЏ РѕС€РёР±РєР° РѕР±СЂР°Р±РѕС‚РєРё: '||SQLERRM;
 END parse_str;
 
 PROCEDURE parse_requests(pMess OUT VARCHAR2, pType IN VARCHAR2, pGrp IN NUMBER, pMARKER_ID IN NUMBER)
 IS
 BEGIN
     IF pMARKER_ID IS NULL THEN
-        pMess := 'Нет помеченных запросов.';
+        pMess := 'РќРµС‚ РїРѕРјРµС‡РµРЅРЅС‹С… Р·Р°РїСЂРѕСЃРѕРІ.';
         RETURN;
     END IF;
     

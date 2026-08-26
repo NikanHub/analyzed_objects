@@ -13,4 +13,8 @@ PROMPT ACC407P_GRAF.sql
 @@ACC407P_GRAF.sql
 SHOW ERRORS
 
+PROMPT acc407p_acc_grp_graf.sql
+@@acc407p_acc_grp_graf.sql
+SHOW ERRORS
+
 SPOOL OFF
